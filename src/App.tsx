@@ -11,10 +11,16 @@ import ChatBot from './pages/ChatBot';
 import Info from './pages/Info';
 import Help from './pages/Help';
 import type { RootState  } from './app/store'
+import { useEffect, useState } from 'react';
+
 
 
 const App  = () => {
   const isDark = useSelector((state: RootState)=> state.theme.isDark)
+
+
+
+
   return (
     <>
     <ThemeProvider theme={isDark ? darkTheme : lightTheme}>

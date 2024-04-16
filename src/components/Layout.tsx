@@ -128,7 +128,7 @@ export default function ResponsiveDrawer({ children }: {children: ReactNode}) {
             <ListItem   sx={{  width: '100%', display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <Box sx={{ display: "flex", alignItems: "center",}}>
               <ListItemIcon>
-                <Icon icon="mdi:robot-angry" fontSize={34}></Icon>
+                <Icon icon="mdi:bug" fontSize={34}></Icon>
               </ListItemIcon>
               <Typography variant="h6" sx={{whiteSpace: "nowrap"}}>BUGLAND Ltd </Typography>
                 </Box>
