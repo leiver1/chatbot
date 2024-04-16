@@ -11,7 +11,7 @@ import ChatBot from './pages/ChatBot';
 import Info from './pages/Info';
 import Help from './pages/Help';
 import type { RootState  } from './app/store'
-import { useEffect, useState } from 'react';
+
 
 
 
