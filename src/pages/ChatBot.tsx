@@ -159,20 +159,25 @@ const ChatBot = () => {
           width: "100%",
           height: "100%",
           display: "flex",
+
           flexDirection: "column",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        <Box
-          sx={{
-            py: 4,
-            px: { xs: 2, sm: 6, md: 10, lg: 25 },
-            maxHeight: "90%",
-            overflow: "scroll",
-            width: "100%",
-          }}
-        >
+       <Box
+  sx={{
+    py: 4,
+    px: { xs: 2, sm: 6, md: 10, lg: 25 },
+    maxHeight: "90%",
+    overflowY: "scroll",
+    width: "100%",
+    '&::-webkit-scrollbar': {
+      display: 'none', // Versteckt die Scrollbar in Webkit-Browsern
+    },
+    scrollbarWidth: 'none', // Versteckt die Scrollbar in Firefox
+  }}
+>
           {chats.length <= 0 && (
             <>
           <Box
