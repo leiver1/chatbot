@@ -54,7 +54,7 @@ const ChatBot = () => {
     const isTypingInterval = setTimeout(() => {
       console.log("not typing anymore");
       setTyping(false);
-    }, 2500);
+    }, 700);
 
     const dotAnimation = setInterval(() => {
       setInitialBotText([...initialBotText, "."]);
