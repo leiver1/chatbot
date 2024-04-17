@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, ChangeEvent } from "react";
+import  { useState, useEffect, useRef, ChangeEvent } from "react";
 import {
   Box,
   Typography,
@@ -7,8 +7,8 @@ import {
   Paper,
   InputAdornment,
 } from "@mui/material";
+import axios from "axios";
 import { Icon } from "@iconify/react";
-import { responses } from "../Bot/responses";
 import "./typingDots.css";
 interface KeyboardEvent {
   key: string;
@@ -16,23 +16,33 @@ interface KeyboardEvent {
 const ChatBot = () => {
   const [initialBotText, setInitialBotText] = useState<string[]>([]);
   const [isTyping, setTyping] = useState<boolean>(true);
+  const [falsyCount, setFalsyCount] = useState(0)
 
-  const robotorIcons = [
-    "mdi:robot",
-    "mdi:robot-industrial-outline",
-    "mdi:robot-angry-outline",
-    "mdi:robot-confused-outline",
-    "mdi:robot-dead-outline",
+  const successRobotIcons = [
+
+
     "mdi:robot-excited-outline",
     "mdi:robot-happy-outline",
     "mdi:robot-love-outline",
   ];
 
-  const handleRandomIcons = (): string => {
-    const random = Math.floor(Math.random() * robotorIcons.length);
-    return robotorIcons[random];
-  };
+  const falsyRobotIcons = [
+    "mdi:robot-confused-outline",
+    "mdi:robot-dead-outline",
+  ];
 
+  const madRobotIcons = [
+    "mdi:robot-angry-outline",
+    "mdi:robot-angry",
+    "mdi:emoticon-angry-outline"
+  ];
+
+  
+
+  const handleRandomIcons = (array: string[]): string => {
+    const random = Math.floor(Math.random() * array.length);
+    return array[random];
+  };
 
   const [chats, setChats] = useState<
     { role: string; icon: string; text: string }[]
@@ -43,12 +53,9 @@ const ChatBot = () => {
     text: string;
   }>({
     role: "",
-    icon: handleRandomIcons(),
+    icon: "",
     text: "",
   });
-
-
- 
 
   useEffect(() => {
     const isTypingInterval = setTimeout(() => {
@@ -116,39 +123,55 @@ const ChatBot = () => {
     }
   }, [chats]);
 
-  const falsyResponses = [
-    "Das habe ich nicht verstanden.",
-    "Entschuldige. Darauf habe ich keine Antwort. Könntest du das anders formulieren. ",
-    "Ich weiss nicht was du meinst.",
-  ];
 
-  const getRandomFalsyResponse = (): string => {
-    const random = Math.floor(Math.random() * falsyResponses.length);
-    return falsyResponses[random];
-  };
 
-  const handleResponse = (): void => {
-    if (content.text) {
-      const userMessage = content.text.trim();
-      let botMessage: string;
 
-      if (responses[userMessage]) {
-        botMessage = responses[userMessage];
-      } else {
-        botMessage = getRandomFalsyResponse();
+  const handleResponse = async () => {
+    setTyping(true);
+    setChats((prevChats) => [
+      ...prevChats,
+      { role: "me", icon: "mdi:account-outline", text: content.text },
+      { role: "bot", icon: "mdi:robot", text: "" },
+    ]);
+
+    try {
+      const response = await axios.post("/api/test", {
+        bot: content.text,
+      });
+
+      const message = response.data.response;
+      const success = response.data.success;
+      console.log("success", success)
+
+      if(!success){
+        setFalsyCount(falsyCount + 1)
       }
 
-      setChats((prevChats) => [
-        ...prevChats,
-        { role: "me", icon: "mdi:account-outline", text: userMessage },
-        { role: "bot", icon: handleRandomIcons(), text: botMessage },
-      ]);
+      console.log("sdf", message);
+      if (typeof message === "string") {
 
-      setContent({
-        role: "",
-        icon: handleRandomIcons(),
-        text: "",
-      });
+        setChats((prevChats) => {
+
+          return prevChats.map((chat, index) => {
+            if (index === prevChats.length - 1 && chat.role === "bot") {
+              return { ...chat, icon: success ? handleRandomIcons(successRobotIcons) : falsyCount > 0 && falsyCount < 3 ? handleRandomIcons(falsyRobotIcons) : falsyCount >= 3 ? handleRandomIcons(madRobotIcons) : 'mdi:robot'  , text: message };
+            }
+            return chat;
+          });
+        });
+
+        setContent({
+          role: "",
+          icon: "",
+          text: "",
+        });
+        setTyping(false);
+      } else {
+        console.error("Expected string from API but got:", message);
+      }
+    } catch (error) {
+      setTyping(false);
+      console.error("Failed to get response from API:", error);
     }
   };
 
@@ -165,61 +188,55 @@ const ChatBot = () => {
           alignItems: "center",
         }}
       >
-       <Box
-  sx={{
-    py: 4,
-    px: { xs: 2, sm: 6, md: 10, lg: 25 },
-    maxHeight: "90%",
-    overflowY: "scroll",
-    width: "100%",
-    '&::-webkit-scrollbar': {
-      display: 'none', // Versteckt die Scrollbar in Webkit-Browsern
-    },
-    scrollbarWidth: 'none', // Versteckt die Scrollbar in Firefox
-  }}
->
+        <Box
+          sx={{
+            py: 4,
+            px: { xs: 2, sm: 6, md: 10, lg: 25 },
+            maxHeight: "90%",
+            overflowY: "scroll",
+            width: "100%",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            scrollbarWidth: "none",
+          }}
+        >
           {chats.length <= 0 && (
             <>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 3,
-              mb: 6,
-            }}
-          >
-            <Paper
-              sx={{
-                borderRadius: "100px",
-                p: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Icon icon="mdi:robot" fontSize={24}></Icon>
-            </Paper>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 3,
+                  mb: 6,
+                }}
+              >
+                <Paper
+                  sx={{
+                    borderRadius: "100px",
+                    p: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon icon="mdi:robot" fontSize={24}></Icon>
+                </Paper>
 
-
-              {isTyping ? (
-                <Box>
-                <div className="snippet" data-title="dot-elastic">
-                <div className="stage">
-                <div className="dot-elastic"></div>
-                </div>
-                </div>
-                </Box>
-              ) : (
-                <p>Wie kann ich Ihnen weiter helfen?</p>
-              )}
-
-
-
-
-          </Box>
-              </>
-
-            )}
+                {isTyping ? (
+                  <Box>
+                    <div className="snippet" data-title="dot-elastic">
+                      <div className="stage">
+                        <div className="dot-elastic"></div>
+                      </div>
+                    </div>
+                  </Box>
+                ) : (
+                  <p>Wie kann ich Ihnen weiter helfen?</p>
+                )}
+              </Box>
+            </>
+          )}
 
           {chats.map((chat, index) => (
             <Box
@@ -248,7 +265,20 @@ const ChatBot = () => {
                 >
                   <Icon icon={chat.icon} fontSize={24}></Icon>
                 </Paper>
-                <Typography>{chat.text}</Typography>
+
+                {isTyping &&
+                chat.role === "bot" &&
+                index === chats.length - 1 ? (
+                  <Box>
+                    <div className="snippet" data-title="dot-elastic">
+                      <div className="stage">
+                        <div className="dot-elastic"></div>
+                      </div>
+                    </div>
+                  </Box>
+                ) : (
+                  <Typography>{chat.text}</Typography>
+                )}
               </Box>
             </Box>
           ))}

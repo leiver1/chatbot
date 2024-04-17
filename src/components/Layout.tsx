@@ -182,7 +182,7 @@ export default function ResponsiveDrawer({ children }: {children: ReactNode}) {
     <>
       <Dialog open={open} fullWidth maxWidth="sm">
         <DialogTitle>
-          <Typography variant="h4">Chatverlauf löschen?</Typography>
+          <Typography variant="h5" >Chatverlauf löschen?</Typography>
         </DialogTitle>
         <Divider></Divider>
         <DialogContent>
