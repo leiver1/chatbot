@@ -107,6 +107,7 @@ export default function ResponsiveDrawer({ children }: {children: ReactNode}) {
 
   const  deleteChat = () =>{
     localStorage.removeItem("chat")
+    localStorage.removeItem("roboter")
     setOpen(false)
     window.location.reload()
   }

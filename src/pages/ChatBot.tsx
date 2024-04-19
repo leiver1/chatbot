@@ -59,7 +59,7 @@ const ChatBot = () => {
 
   useEffect(() => {
     const isTypingInterval = setTimeout(() => {
-      console.log("not typing anymore");
+
       setTyping(false);
     }, 700);
 
@@ -75,7 +75,7 @@ const ChatBot = () => {
 
   useEffect(() => {
     if (!isTyping) {
-      console.log(isTyping);
+
       setInitialBotText(["Wie kann ich Ihnen weiter helfen?"]);
     }
   }, [isTyping]);
@@ -96,34 +96,37 @@ const ChatBot = () => {
     if (localstorage) {
       const chat = JSON.parse(localstorage);
       setChats(chat);
-    } else {
-      console.log("nothing");
-    }
+    } 
   }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === "Enter") {
-        content.text && handleResponse();
-        localStorage.setItem("chat", JSON.stringify(chats));
-
-        const formattedText = content.text.toLowerCase()
-        const roboter = ["windowfly, cleanbug, gardenbeetle"]
-        for(const robot in roboter){
-          if(formattedText.includes(robot)){
-            localStorage.setItem("roboter", robot)
+        if (e.key === "Enter" && content.text) {
+          localStorage.setItem("chat", JSON.stringify(chats));
+          const roboter = ["windowfly", "cleanbug", "gardenbeetle"];
+          
+          let found = false;
+          for (const robot of roboter) {
+            if (content.text.toLowerCase().includes(robot)) {
+              localStorage.setItem("roboter", robot);
+              found = true;
+              break;
+            }
           }
+          
+          if (!found) {
+            console.log("BRUTHER URH");
+          }
+          handleResponse();
         }
-
-      }
     };
 
     document.addEventListener("keydown", handleKeyDown);
-
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+        document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [content, chats]);
+}, [content, chats]);  // Ensure dependencies are correctly listed
+
 
 
 
@@ -145,21 +148,24 @@ const ChatBot = () => {
       { role: "me", icon: "mdi:account-outline", text: content.text },
       { role: "bot", icon: "mdi:robot", text: "" },
     ]);
+    
+   
 
     try {
-      const response = await axios.post("/api/chatbot", {
+      const response = await axios.post("/api/chatbot2", {
         bot: content.text,
+        roboter: localStorage.getItem('roboter') && localStorage.getItem('roboter') 
       });
 
       const message = response.data.response;
       const success = response.data.success;
-      console.log("success", success)
+
 
       if(!success){
         setFalsyCount(falsyCount + 1)
       }
 
-      console.log("sdf", message);
+
       if (typeof message === "string") {
 
         setChats((prevChats) => {
