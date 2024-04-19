@@ -135,7 +135,7 @@ const ChatBot = () => {
     ]);
 
     try {
-      const response = await axios.post("/api/test", {
+      const response = await axios.post("/api/chatbot", {
         bot: content.text,
       });
 
