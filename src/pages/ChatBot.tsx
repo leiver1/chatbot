@@ -106,6 +106,15 @@ const ChatBot = () => {
       if (e.key === "Enter") {
         content.text && handleResponse();
         localStorage.setItem("chat", JSON.stringify(chats));
+
+        const formattedText = content.text.toLowerCase()
+        const roboter = ["windowfly, cleanbug, gardenbeetle"]
+        for(const robot in roboter){
+          if(formattedText.includes(robot)){
+            localStorage.setItem("roboter", robot)
+          }
+        }
+
       }
     };
 
@@ -115,6 +124,9 @@ const ChatBot = () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [content, chats]);
+
+
+
 
   useEffect(() => {
     if (chats.length > 0) {
