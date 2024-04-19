@@ -102,21 +102,22 @@ const ChatBot = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent): void => {
         if (e.key === "Enter" && content.text) {
-          localStorage.setItem("chat", JSON.stringify(chats));
-          const roboter = ["windowfly", "cleanbug", "gardenbeetle"];
+    
+          // localStorage.setItem("chat", JSON.stringify(chats));
+          // const roboter = ["windowfly", "cleanbug", "gardenbeetle"];
           
-          let found = false;
-          for (const robot of roboter) {
-            if (content.text.toLowerCase().includes(robot)) {
-              localStorage.setItem("roboter", robot);
-              found = true;
-              break;
-            }
-          }
+          // let found = false;
+          // for (const robot of roboter) {
+          //   if (content.text.toLowerCase().includes(robot)) {
+          //     localStorage.setItem("roboter", robot);
+          //     found = true;
+          //     break;
+          //   }
+          // }
           
-          if (!found) {
-            console.log("BRUTHER URH");
-          }
+          // if (!found) {
+          //   console.log("BRUTHER URH");
+          // }
           handleResponse();
         }
     };
@@ -149,7 +150,21 @@ const ChatBot = () => {
       { role: "bot", icon: "mdi:robot", text: "" },
     ]);
     
-   
+    localStorage.setItem("chat", JSON.stringify(chats));
+    const roboter = ["windowfly", "cleanbug", "gardenbeetle"];
+    
+    let found = false;
+    for (const robot of roboter) {
+      if (content.text.toLowerCase().includes(robot)) {
+        localStorage.setItem("roboter", robot);
+        found = true;
+        break;
+      }
+    }
+    
+    if (!found) {
+      console.log("BRUTHER URH");
+    }
 
     try {
       const response = await axios.post("/api/chatbot2", {
