@@ -14,35 +14,37 @@ interface KeyboardEvent {
   key: string;
 }
 const ChatBot = () => {
+
   const [initialBotText, setInitialBotText] = useState<string[]>([]);
   const [isTyping, setTyping] = useState<boolean>(true);
   const [falsyCount, setFalsyCount] = useState(0)
 
-  const successRobotIcons = [
-
-
-    "mdi:robot-excited-outline",
-    "mdi:robot-happy-outline",
-    "mdi:robot-love-outline",
-  ];
-
-  const falsyRobotIcons = [
-    "mdi:robot-confused-outline",
-    "mdi:robot-dead-outline",
-  ];
-
-  const madRobotIcons = [
-    "mdi:robot-angry-outline",
-    "mdi:robot-angry",
-    "mdi:emoticon-angry-outline"
-  ];
+ 
 
   
 
-  const handleRandomIcons = (array: string[]): string => {
-    const random = Math.floor(Math.random() * array.length);
-    return array[random];
+  const handleIcons = () => {
+      const robot = localStorage.getItem('roboter')
+
+
+        switch(robot){
+          case 'cleanbug':
+            return 'game-icons:robot-golem'
+            break;
+          case 'windowfly': 
+          return 'game-icons:tracked-robot'
+          break;
+          case 'gardenbeetle':
+            return 'game-icons:mono-wheel-robot'
+            break;
+          
+          default: 
+          return 'mdi:robot'
+        }
   };
+
+
+
 
   const [chats, setChats] = useState<
     { role: string; icon: string; text: string }[]
@@ -187,7 +189,7 @@ const ChatBot = () => {
 
           return prevChats.map((chat, index) => {
             if (index === prevChats.length - 1 && chat.role === "bot") {
-              return { ...chat, icon: success ? handleRandomIcons(successRobotIcons) : falsyCount > 0 && falsyCount < 3 ? handleRandomIcons(falsyRobotIcons) : falsyCount >= 3 ? handleRandomIcons(madRobotIcons) : 'mdi:robot'  , text: message };
+              return { ...chat, icon: handleIcons() , text: message };
             }
             return chat;
           });
