@@ -3,7 +3,7 @@ import {  ThemeProvider } from '@mui/material';
 import Login from './pages/Login';
 import ProtectedRoutes from './router/ProtectedRoutes'
 import { Routes, Route } from 'react-router-dom';
-import Test from './pages/Test';
+import Home from './pages/Home';
 import CssBaseline from "@mui/material/CssBaseline";
 import {darkTheme, lightTheme} from './theme/themeConfig'
 import { useSelector } from 'react-redux';
@@ -18,9 +18,6 @@ import type { RootState  } from './app/store'
 const App  = () => {
   const isDark = useSelector((state: RootState)=> state.theme.isDark)
 
-
-
-
   return (
     <>
     <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
@@ -29,7 +26,7 @@ const App  = () => {
       <Routes>
         <Route path='/login' element={<Login />}></Route>
         <Route element={<ProtectedRoutes/>}>
-            <Route  path="/" element={<Test/>} /> 
+            <Route  path="/" element={<Home/>} /> 
             <Route  path="/chat-bot" element={<ChatBot/>} /> 
             <Route  path="/info" element={<Info   />} /> 
             <Route  path="/help" element={<Help/>} /> 

@@ -60,9 +60,9 @@ export default function ResponsiveDrawer({
 
   const drawerLists = [
     {
-      name: "Dashboard",
+      name: "Produkte",
       path: "/",
-      icon: "mdi:view-dashboard",
+      icon: "mdi:shopping-outline",
     },
     {
       name: "Chat Bot",
@@ -74,11 +74,11 @@ export default function ResponsiveDrawer({
       path: "/info",
       icon: "mdi:information-slab-circle-outline",
     },
-    {
-      name: "Help",
-      path: "/help",
-      icon: "mdi:help-circle-outline",
-    },
+    // {
+    //   name: "Help",
+    //   path: "/help",
+    //   icon: "mdi:help-circle-outline",
+    // },
   ];
 
   const handleDrawerClose = () => {
